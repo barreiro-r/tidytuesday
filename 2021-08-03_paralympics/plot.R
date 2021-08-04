@@ -50,6 +50,7 @@ world <-
 data2plot_sub <-
   participating_abb %>%
   left_join(ne_countries(scale = "small", returnclass = "sf") %>% select(brk_a3, continent)) %>%
+  mutate(continent = if_else(str_detect(continent,"America"),"America", continent)) %>%
   select(-geometry) %>%
   filter(is_in == 1) %>%
   count(year, continent)
@@ -71,7 +72,7 @@ gsub <-
     theme(axis.text.y = element_blank(), 
           legend.position = 'NA',
           axis.text.x = element_text(size = 7),
-          plot.title = element_text(size = 7))
+          plot.title = element_text(size = 10, face = 'plain', hjust = .5))
 
 # Main plot
 my_animation <-
