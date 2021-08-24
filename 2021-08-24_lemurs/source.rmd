@@ -1,0 +1,150 @@
+---
+title: "TidyTemplate"
+date: 2021-08-24
+output: html_output
+---
+
+# TidyTuesday
+
+Join the R4DS Online Learning Community in the weekly #TidyTuesday event!
+Every week we post a raw dataset, a chart or article related to that dataset, and ask you to explore the data.
+While the dataset will be “tamed”, it will not always be tidy! As such you might need to apply various R for Data Science techniques to wrangle the data into a true tidy format.
+The goal of TidyTuesday is to apply your R skills, get feedback, explore other’s work, and connect with the greater #RStats community!
+As such we encourage everyone of all skills to participate!
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(tidytuesdayR)
+
+```
+
+```{r theme, include=FALSE}
+# Theme
+library(hrbrthemes)
+library(ggtext)
+theme_set(
+  theme_ipsum_rc(grid = 'X') +
+    theme(
+      plot.title.position = "plot",
+      plot.margin = margin(25,25,25,25),
+      axis.title.x = element_markdown(hjust = .5, size = 12),
+      axis.title.y = element_markdown(hjust = .5, size = 12),
+      plot.subtitle = element_markdown(family = 'Roboto Condensed', color = 'grey60')
+    )
+)
+```
+
+
+# Load the weekly Data
+
+Dowload the weekly data and make available in the `tt` object.
+
+```{r Load}
+
+# tt <- tt_load("2021-08-24") 
+# Not working (Error in !check_connectivity() : invalid argument type)
+
+
+lemurs <- 
+  read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-08-24/lemur_data.csv')
+```
+
+
+# Readme
+
+Take a look at the readme for the weekly data to get insight on the dataset.
+This includes a data dictionary, source, and a link to an article on the data.
+
+```{r Readme, eval = interactive()}
+
+lemurs
+
+```
+
+
+# Glimpse Data
+
+Take an initial look at the format of the data available.
+
+```{r Glimpse}
+
+glimpse(lemurs)
+
+```
+
+# Wrangle
+
+Explore the data and process it into a nice format for plotting! Access each dataset by name by using a dollarsign after the `tt` object and then the name of the data set.
+
+```{r Wrangle}
+data2plot <-
+lemurs %>%
+  filter(!is.na(age_at_death_y)) %>%
+  filter(sex != "ND") %>%
+  filter(!is.na(age_at_death_y)) %>%
+  filter(birth_type != 'Unk') %>%
+  distinct(
+    taxon, dlc_id, birth_type, age_at_death_y, age_category) %>%
+  mutate(
+    taxon = fct_lump(taxon,n = 30),
+    age_category = case_when(age_category == 'IJ' ~ 'Infant/Juvenile', 
+                      age_category == 'young_adult' ~ 'Young-adult', 
+                      age_category == 'adult' ~ 'Adult'),
+    age_category = factor(
+      age_category, levels = c('Infant/Juvenile', 'Young-adult','Adult') %>% rev
+    ),
+    birth_type = case_when(
+      birth_type == 'CB' ~ 'Captive-Born',
+      birth_type == 'WB' ~ 'Wild-Born',
+      birth_type == 'Unk' ~ 'Unknown')) %>%
+  count(taxon, age_category, birth_type) %>%
+  group_by(taxon,birth_type) %>%
+  mutate(pct = n/sum(n))
+```
+
+
+# Visualize
+
+Using your processed dataset, create your unique visualization.
+
+```{r Visualize, fig.height=3 *2, fig.width=5 *2}
+data2plot %>%
+  ggplot(aes(x = pct , y = fct_reorder(taxon,n,sum), fill = age_category)) +
+  geom_col(orientation = 'y') +
+  geom_point(aes(y = NA, color = age_category), size = 2, shape = 16) + # just for pretty labels
+  geom_text(aes(label = n), position = position_stack(vjust = .5), color = 'white', size = 3) +
+  guides(color = guide_legend(override.aes = list(size = 3),reverse = TRUE), fill = FALSE) +
+  labs(x = '**Frequency** (%)', 
+       y = '**Taxon**', 
+       color = NULL,
+       title = str_c('Lemur early death'), 
+       subtitle = 'Why there is so many lemurs that die at infancy?') +
+  scale_y_discrete(
+    limits = data2plot %>% 
+      filter(as.character(age_category) == 'Infant/Juvenile') %>%
+      arrange(desc(pct)) %>% pull(taxon), expand = c(0,0)) +
+  scale_x_continuous(label = scales::percent) +
+  ggthemes::scale_fill_canva() +
+  ggthemes::scale_color_canva() +
+  theme(legend.position = 'bottom', strip.text = element_text(hjust = .5)) +
+  facet_grid(~birth_type) +
+  coord_fixed(ratio = .04, expand = c(0,0))
+
+
+```
+
+# Save Image
+
+Save your image for sharing. Be sure to use the `#TidyTuesday` hashtag in your post on twitter! 
+
+```{r}
+
+# This will save your most recent plot
+ggsave(
+  filename = "tidytuesday_2021-08-24.png",
+  device = "png",width = 5*2, height = 3*2, bg = '#f0eeeb')
+
+```
