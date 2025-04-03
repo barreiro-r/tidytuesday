@@ -1,8 +1,3 @@
----
-title: "TidyTuesday April 1st"
-format: html
----
-```{r}
 library(dplyr)
 library(tidyr)
 library(stringr)
@@ -147,5 +142,3 @@ pokemon_df |>
     subtitle = 'Only outliers (> 3 SD) are shown as images'
   ) +
   theme(panel.grid.major.y = element_blank())
-
-```
