@@ -14,14 +14,15 @@ theme_set(
   theme_minimal() +
     theme(
       plot.title.position = "plot",
-      plot.title = element_markdown(family = "Roboto Condensed", size = 14),
+      plot.title = element_markdown(family = "Ubuntu", size = 14),
       plot.margin = margin(25, 25, 25, 25),
-      axis.title.x = element_markdown(family = "Roboto Condensed", hjust = .5, size = 12),
-      axis.title.y = element_markdown(family = "Roboto Condensed", hjust = .5, size = 12),
-      axis.text = element_markdown(family = "Roboto Condensed", hjust = .5, size = 8),
+      axis.title.x = element_markdown(family = "Ubuntu", hjust = .5, size = 12),
+      axis.title.y = element_markdown(family = "Ubuntu", hjust = .5, size = 12),
+      axis.text = element_markdown(family = "Chakra Petch", hjust = .5, size = 8, color = "grey60"),
       legend.position = "top",
+      panel.grid = element_line(color = 'grey60', linewidth = 0.1),
       panel.grid.minor = element_blank(),
-      text = element_text(family = "Roboto Condensed")
+      text = element_text(family = "Ubuntu")
     )
 )
 
