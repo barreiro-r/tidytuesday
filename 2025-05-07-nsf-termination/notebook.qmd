@@ -1,0 +1,153 @@
+---
+title: "Untitled"
+format: html
+---
+
+```{r}
+tuesdata <- tidytuesdayR::tt_load(2025, week = 18)
+nsf_terminations <- tuesdata$nsf_terminations
+```
+
+```{r}
+library(tidyverse)
+
+
+your_tibble <- nsf_terminations |>
+  select(
+    grant_id = grant_number,
+    start = nsf_startdate,
+    pre_end = termination_letter_date,
+    end = nsf_expected_end_date
+  )
+
+```
+
+### Create every month-year
+```{r}
+#' Create a Tibble with Monthly Entries for a Given Date Range and ID
+#'
+#' This function takes a start date, an end date, and an identifier.
+#' It generates a tibble where each row represents a month within the
+#' date range (inclusive). The first day of each month in the range is used.
+#'
+#' @param start_date A character string or Date object representing the start date.
+#'                   Example: "2023-01-15" or as.Date("2023-01-15").
+#' @param end_date A character string or Date object representing the end date.
+#'                 Example: "2023-04-10" or as.Date("2023-04-10").
+#' @param id An identifier (e.g., character, numeric) that will be repeated
+#'           for each month in the generated tibble.
+#'
+#' @return A tibble with two columns: 'id' and 'month_period_start'.
+#'         'month_period_start' contains Date objects representing the
+#'         first day of each month in the specified range.
+#'         Returns an empty tibble if start_date is after end_date,
+#'         or if inputs are invalid.
+#'
+#' @examples
+#' expand_date_range_to_months("2023-11-10", "2024-02-20", "Project_A")
+#' expand_date_range_to_months(as.Date("2025-01-05"), as.Date("2025-03-15"), 123)
+#' expand_date_range_to_months("2023-05-01", "2023-03-01", "InvalidRange") # Start after End
+
+expand_date_range_to_months <- function(start_date, end_date, id) {
+  # Attempt to convert inputs to Date objects
+  # Suppress warnings during conversion, we'll check for NAs later
+  s_date <- suppressWarnings(as.Date(start_date))
+  e_date <- suppressWarnings(as.Date(end_date))
+
+  # Validate dates: check if conversion resulted in NA or if original input was NA
+  if (is.na(s_date) || is.na(e_date)) {
+    warning(
+      "Invalid start_date or end_date provided. Could not convert to Date. Returning empty tibble."
+    )
+    return(tibble(
+      id = typeof(id)[0],
+      month_period_start = as.Date(character(0))
+    ))
+  }
+
+  # Get the first day of the month for the start and end dates
+  start_month_floor <- floor_date(s_date, "month")
+  end_month_floor <- floor_date(e_date, "month")
+
+  # If the calculated start month is after the end month, return an empty tibble
+  if (start_month_floor > end_month_floor) {
+    # message("Start date is after end date (considering month starts). Returning empty tibble for id: ", id)
+    return(tibble(
+      id = typeof(id)[0],
+      month_period_start = as.Date(character(0))
+    ))
+  }
+
+  # Generate a sequence of the first day of each month from start to end
+  month_sequence <- seq(start_month_floor, end_month_floor, by = "month")
+
+  # If the sequence is empty (should be covered by the check above, but as a safeguard)
+  if (length(month_sequence) == 0) {
+    return(tibble(
+      id = typeof(id)[0],
+      month_period_start = as.Date(character(0))
+    ))
+  }
+
+  # Create the tibble
+  result_tibble <- tibble(
+    id = rep(id, length(month_sequence)),
+    month_period_start = month_sequence
+  )
+
+  return(result_tibble)
+}
+```
+
+```{r}
+expand_date_range_to_months("2023-11-10", "2024-02-20", "Project_A")
+expanded_tibble <- your_tibble %>%
+  dplyr::rowwise() %>% # Process row by row
+  dplyr::mutate(
+    monthly_breakdown = list(
+      expand_date_range_to_months(
+        start_date = start,
+        end_date = end,
+        id = grant_id
+      )
+    )
+  ) %>%
+  dplyr::ungroup() %>%
+  tidyr::unnest(monthly_breakdown) |>
+  count(month_period_start)
+
+expanded_tibble_pre <- your_tibble %>%
+  dplyr::rowwise() %>% # Process row by row
+  dplyr::mutate(
+    monthly_breakdown = list(
+      expand_date_range_to_months(
+        start_date = start,
+        end_date = pre_end,
+        id = grant_id
+      )
+    )
+  ) %>%
+  dplyr::ungroup() %>%
+  tidyr::unnest(monthly_breakdown) |>
+  count(month_period_start)
+
+expanded_tibble_pre <- bind_rows(
+  expanded_tibble_pre,
+  tibble(
+    month_period_start = expanded_tibble_pre |>
+      pull(month_period_start) |>
+      max() +
+      month(1),
+    n = 0
+  )
+)
+
+
+expanded_tibble |>
+  ggplot(aes(x = month_period_start, y = n)) +
+  geom_line() +
+  ggpattern::geom_ribbon_pattern(aes(x = month_period_start, ymax = n, ymin = 0), pattern_density = .1
+  ) +
+  geom_line(data = expanded_tibble_pre) +
+  geom_ribbon(data = expanded_tibble_pre, aes(x = month_period_start, ymax = n, ymin = 0), fill = 'red', color = 'red')
+```
