@@ -1,0 +1,138 @@
+/* css styles */
+
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+p {
+    font-family: "Ubuntu";
+    font-size: .8em;
+}
+
+.navbar-title {
+    display: none;
+}
+
+
+.logo {
+    max-width: 20rem;
+    margin-bottom: 2rem;
+}
+
+.card {
+    --bs-card-inner-border-radius: calc(0.5rem - 1px);
+    --bs-card-border-radius: .5rem;
+    
+}
+
+.card-img {
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.quarto-listing-category .category {
+    color: #6c757d;
+    border: solid 1px #87878730;;
+    border-radius: .25rem;
+    text-transform: uppercase;
+    font-size: .65em;
+    padding-left: .5em;
+    padding-right: .5em;
+    padding-top: .15em;
+    padding-bottom: .15em;
+    cursor: pointer;
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+
+#quarto-margin-sidebar .quarto-listing-category {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#quarto-content.page-columns #quarto-margin-sidebar, #quarto-content.page-columns #quarto-sidebar {
+    padding-top: 180px;
+}
+
+#quarto-margin-sidebar .quarto-listing-category-title {
+    color: #6c757d;
+    font-weight: 400;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.09rem;
+}
+
+.quarto-grid-item .card-attribution {
+    padding-top: 0px;
+    display: flex;
+    gap: 1em;
+    color: #6c757d;
+    text-transform: none;
+    font-weight: 400;
+    flex-grow: 10;
+}
+
+
+.quarto-grid-item .card-attribution.end {
+    justify-content: flex-start;
+}
+
+.quarto-grid-item .listing-categories .listing-category {
+    background-color:#87878730;
+    letter-spacing: 0.05rem;
+    border: 0px;
+    font-size: 0.5rem;
+}
+
+body .page-columns {
+    display: grid;
+    gap: 0;
+    grid-template-columns: 
+        [screen-start] 1.5em 
+        [screen-start-inset] 5fr 
+        [page-start page-start-inset] 35px 
+        [body-start-outset] 35px 
+        [body-start] 1.5em 
+        [body-content-start] minmax(500px, calc(650px - 3em)) 
+        [body-content-end] 1.5em 
+        [body-end] 35px 
+        [body-end-outset] minmax(75px, 145px) 
+        [page-end-inset] 35px 
+        [page-end] 5fr 
+        [screen-end-inset] 1.5em 
+        [screen-end];
+}
+
+div.sourceCode {
+    background-color: transparent;
+    border: 1px solid #87878730;;
+    border-radius: .5rem 8.5px;
+}
+
+pre.sourceCode {
+    font-size: 0.7rem;
+}
+
+.navbar {
+    border: 0px;
+    background-color: transparent;
+}
+
+.quarto-title-banner {
+    background: transparent;
+}
+
+.card {
+    transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+.minime img {
+    max-height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    overflow: hidden;
+    margin-inline: 5px;
+}
