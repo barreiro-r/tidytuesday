@@ -1,0 +1,44 @@
+---
+title: "Tidytuesday by Rodrigo Barreiro"
+listing:
+  contents: posts
+  sort: "date desc"
+  type: grid
+  fields: [image,date,categories]
+  categories: "numbered"
+  sort-ui: false
+  filter-ui: false
+page-layout: full
+title-block-banner: false
+
+include-in-header:
+  - text: |
+      <style>
+      #title-block-header  {
+        display: none;
+      }
+      .navbar .navbar-brand-container {
+        display: none;
+      }
+      </style>
+---
+
+```{=html}
+<img src='imgs/logo.png' class='logo'>
+```
+
+Hey there, and welcome to my TidyTuesday gallery!  👋
+
+If you're not familiar, [#TidyTuesday](https://github.com/rfordatascience/tidytuesday/tree/main) is this awesome weekly data challenge run by the R for Data Science online community. Every week, they release a brand new dataset, and I jump at the chance to practice my data wrangling and visualization skills in R (and Python).
+
+For each entry, you'll find my code, the visuals I came up with. 
+
+I love seeing what stories the numbers can tell and I hope you enjoy it too!
+
+```{=html}
+<p><span class=minime>— <em>Rodrigo Barreiro</em><img src='imgs/minime.png'></span><p>
+```
+
+ 
+
+### Gallery

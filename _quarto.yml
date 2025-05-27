@@ -1,0 +1,35 @@
+project:
+  type: website
+  render:
+    - "*.qmd"
+    - "!legacy/"
+
+website:
+  title: "TidyTuesday by Rodrigo"
+  repo-url: https://github.com/barreiro-r/tidytuesday
+  page-footer: "Made with Quarto by Rodrigo Barreiro" 
+  favicon: imgs/logo_h2.png
+  # back-to-top-navigation: true
+  # bread-crumbs: true
+  navbar:
+    right:
+      - icon: github
+        text: barreiro-r/tidytuesday
+        href: https://github.com/barreiro-r/tidytuesday
+    search: false
+    logo: imgs/logo_h2.png
+format:
+  html:
+    theme:
+      light: [litera, custom.scss]
+      dark: [darkly, custom.scss, fix-logo-dark.scss]
+    mainfont: "Ubuntu"
+    css: styles.css
+    toc: true
+
+resources:
+  - fonts/*
+
+
+
+
