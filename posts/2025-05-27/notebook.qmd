@@ -285,7 +285,7 @@ data2plot2 |>
   guides(color = 'none', fill = 'none') +
   labs(
     title = 'Well, at least Dragons are clumsy',
-    subtitle = str_wrap('Stats distribuition for each monster type. Each point indicate scaled values for each stats. Darkblue being the high (above mean) stats and orange low (below the mean) stats.', width = 80),
+    subtitle = str_wrap('This chart displays the stats distribution for each monster type. Point colors correspond to scaled stat values, where dark blue signifies higher values (above the mean) and orange signifies lower values (below the mean)', width = 80),
     caption = 'Tidytuesday 2025-05-27'
   )
 
