@@ -1,0 +1,44 @@
+# Axes ----------------------------------------------------
+axes.facecolor  : white
+#axes.edgecolor : 495373
+axes.edgecolor  : white
+axes.grid       : False
+
+# Axes Title
+axes.titlesize      : 10
+axes.titlecolor     : 273151
+axes.titlelocation  : left
+axes.titleweight    : bold
+axes.titlepad       : 10 
+
+# Axes Labels
+axes.labelsize  : 8
+axes.labelcolor : 495373
+
+# Ticks ---------------------------------------------------
+xtick.labelsize  : 8
+ytick.labelsize  : 8
+xtick.color      : 495373
+ytick.color      : 495373
+xtick.major.size : 0
+xtick.minor.size : 0
+ytick.major.size : 0
+ytick.minor.size : 0
+
+
+# Legend --------------------------------------------------
+legend.title_fontsize   : 8
+legend.title_fontweight : bold
+legend.fontsize         : 8
+legend.frameon          : False
+legend.labelspacing     : .2
+legend.labelcolor       : 495373
+legend.handletextpad    : 0.5
+legend.handlelength     : 0.7
+legend.handlelength     : 0.7
+
+# Figure --------------------------------------------------
+figure.facecolor : white
+
+# Fonts ---------------------------------------------------
+font.family: Ubuntu
