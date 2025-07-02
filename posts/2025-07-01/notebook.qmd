@@ -233,7 +233,7 @@ data2plot |>
     breaks = c(-0.8, -0.4, 0, 0.4, 0.8),
     label = scales::dollar
   ) +
-  scale_x_date(breaks = '3 years', labels = year, expand = c(0, 0, 0, 0)) +
+  scale_x_date(braadd @aeaks = '3 years', labels = year, expand = c(0, 0, 0, 0)) +
   scale_fill_manual(
     values = c(delta_premium = cool_gray2, delta_regular = cool_red1)
   ) +
@@ -245,7 +245,7 @@ data2plot |>
     title = "More premium, more expensive gasoline",
     subtitle = str_wrap(
       "The price difference between midgrade and premium gasoline, as well as between midgrade and regular gasoline, has been increasing rapidly in the last decade.",
-      width = 100
+      width = 90
     ),
     pattern_spacing = NULL,
     y = NULL,
@@ -312,7 +312,7 @@ data2plot |>
     legend.key.size = unit(0.3, 'cm'),
     axis.text.y = element_blank(),
     legend.key.spacing.y = unit(3, 'pt'),
-    plot.margin = margin(1, 1, 1, 1),
+    plot.margin = margin(25, 25, 25, 25),
     panel.grid.major.y = element_line(
       color = cool_gray5,
       linewidth = .5,
