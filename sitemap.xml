@@ -1,67 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-07-29/notebook.html</loc>
-    <lastmod>2025-08-01T21:46:52.545Z</lastmod>
+    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-08-05/notebook.html</loc>
+    <lastmod>2025-08-06T14:35:10.968Z</lastmod>
   </url>
   <url>
-    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-07-15/notebook.html</loc>
-    <lastmod>2025-07-17T19:43:43.372Z</lastmod>
-  </url>
-  <url>
-    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-07-01/notebook.html</loc>
-    <lastmod>2025-07-08T21:09:11.212Z</lastmod>
-  </url>
-  <url>
-    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-06-17/notebook.html</loc>
-    <lastmod>2025-06-17T19:52:15.527Z</lastmod>
-  </url>
-  <url>
-    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-06-03/notebook.html</loc>
-    <lastmod>2025-06-03T00:01:09.623Z</lastmod>
-  </url>
-  <url>
-    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-05-20/notebook.html</loc>
-    <lastmod>2025-05-31T02:33:40.815Z</lastmod>
-  </url>
-  <url>
-    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-04-11/notebook.html</loc>
-    <lastmod>2025-05-31T02:33:40.808Z</lastmod>
-  </url>
-  <url>
-    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-02-18/notebook.html</loc>
-    <lastmod>2025-05-31T02:33:40.799Z</lastmod>
-  </url>
-  <url>
-    <loc>https://barreiro-r.github.io/tidytuesday/index.html</loc>
-    <lastmod>2025-07-30T21:09:07.366Z</lastmod>
-  </url>
-  <url>
-    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-03-04/notebook.html</loc>
-    <lastmod>2025-05-31T02:33:40.804Z</lastmod>
-  </url>
-  <url>
-    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-05-13/notebook.html</loc>
-    <lastmod>2025-05-31T02:33:40.812Z</lastmod>
-  </url>
-  <url>
-    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-05-27/notebook.html</loc>
-    <lastmod>2025-05-31T02:33:40.818Z</lastmod>
-  </url>
-  <url>
-    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-06-10/notebook.html</loc>
-    <lastmod>2025-06-17T19:53:22.981Z</lastmod>
-  </url>
-  <url>
-    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-06-24/notebook.html</loc>
-    <lastmod>2025-06-25T19:31:36.666Z</lastmod>
+    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-07-22/notebook.html</loc>
+    <lastmod>2025-07-22T21:09:57.106Z</lastmod>
   </url>
   <url>
     <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-07-08/notebook.html</loc>
     <lastmod>2025-07-08T21:11:44.565Z</lastmod>
   </url>
   <url>
-    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-07-22/notebook.html</loc>
-    <lastmod>2025-07-22T21:09:57.106Z</lastmod>
+    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-06-24/notebook.html</loc>
+    <lastmod>2025-06-25T19:31:36.666Z</lastmod>
+  </url>
+  <url>
+    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-06-10/notebook.html</loc>
+    <lastmod>2025-06-17T19:53:22.981Z</lastmod>
+  </url>
+  <url>
+    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-05-27/notebook.html</loc>
+    <lastmod>2025-05-31T02:33:40.818Z</lastmod>
+  </url>
+  <url>
+    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-05-13/notebook.html</loc>
+    <lastmod>2025-05-31T02:33:40.812Z</lastmod>
+  </url>
+  <url>
+    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-03-04/notebook.html</loc>
+    <lastmod>2025-05-31T02:33:40.804Z</lastmod>
+  </url>
+  <url>
+    <loc>https://barreiro-r.github.io/tidytuesday/index.html</loc>
+    <lastmod>2025-07-30T21:09:07.366Z</lastmod>
+  </url>
+  <url>
+    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-02-18/notebook.html</loc>
+    <lastmod>2025-05-31T02:33:40.799Z</lastmod>
+  </url>
+  <url>
+    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-04-11/notebook.html</loc>
+    <lastmod>2025-05-31T02:33:40.808Z</lastmod>
+  </url>
+  <url>
+    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-05-20/notebook.html</loc>
+    <lastmod>2025-05-31T02:33:40.815Z</lastmod>
+  </url>
+  <url>
+    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-06-03/notebook.html</loc>
+    <lastmod>2025-06-03T00:01:09.623Z</lastmod>
+  </url>
+  <url>
+    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-06-17/notebook.html</loc>
+    <lastmod>2025-06-17T19:52:15.527Z</lastmod>
+  </url>
+  <url>
+    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-07-01/notebook.html</loc>
+    <lastmod>2025-07-08T21:09:11.212Z</lastmod>
+  </url>
+  <url>
+    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-07-15/notebook.html</loc>
+    <lastmod>2025-07-17T19:43:43.372Z</lastmod>
+  </url>
+  <url>
+    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-07-29/notebook.html</loc>
+    <lastmod>2025-08-01T21:46:52.545Z</lastmod>
   </url>
 </urlset>
