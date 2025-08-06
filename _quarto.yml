@@ -21,8 +21,8 @@ website:
 format:
   html:
     theme:
-      light: [litera, custom.scss]
-      dark: [darkly, custom.scss, fix-logo-dark.scss]
+      light: [litera, custom.scss, custom-light.scss]
+      dark: [darkly, custom.scss, fix-logo-dark.scss, custom-dark.scss]
     mainfont: "Ubuntu"
     css: styles.css
     toc: true
