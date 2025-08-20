@@ -2,7 +2,7 @@
 title: "Scottish Munros"
 author: "Rodrigo Barreiro"
 date: "2025-08-19"
-categories: [spatial]
+categories: [geospatial, maps]
 image: "image.png"
 page-navigation: true
 execute: 
