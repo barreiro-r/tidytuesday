@@ -231,7 +231,7 @@ data2plot |>
     y = NULL,
     title = "Lyrical Topics Popularity ",
     subtitle = "in Billboard Hot 100",
-    caption = paste0("Displaying relative popularity for each lyrical topic (not absolute numbers)\n\n", str_wrap("NOTE This visualization offers a preliminary look at the data and may not capture the full complexity of the underlying reality. SOURCE #Tidytuesday 2025-06-17 GITHUB barreiro-r", width = 70))
+    caption = paste0("Displaying relative popularity for each lyrical topic (not absolute numbers)\n\n", str_wrap("NOTE This visualization offers a preliminary look at the data and may not capture the full complexity of the underlying reality. SOURCE #Tidytuesday 2025-08-26 GITHUB barreiro-r", width = 70))
   ) +
   scale_x_continuous(
     breaks = seq(min(data2plot$year), max(data2plot$year), length.out = 5),
