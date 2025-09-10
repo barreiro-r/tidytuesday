@@ -1,0 +1,241 @@
+---
+title: "Henley Passport Index Data"
+author: "Rodrigo Barreiro"
+date: "2025-09-09"
+categories: distribuition
+image: "image.png"
+page-navigation: true
+execute: 
+  warning: false
+  message: false
+---
+
+<!-- starbegging -->
+::: callout-tip
+{{< iconify line-md:star-pulsating-loop >}} If this code was useful to you, please consider [give it a little star](https://github.com/barreiro-r/tidytuesday) on GitHub.
+:::
+
+## About the Data
+<!-- giving credits -->
+::: callout-note
+{{< iconify line-md:github-loop >}} Check the data in [TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-09-09/readme.md) GitHub repository.
+:::
+
+<!-- intro -->
+This week we are exploring data from the [Henley Passport Index API](api.henleypassportindex.com/api/v3/countries). 
+The [Henley Passport Index](https://www.henleyglobal.com/passport-index/about) is produced by Henley & Partners and captures 
+the number of countries to which travelers in possession of each passport in the world may enter visa free. 
+
+
+## 1 Initializing
+### 1.1 Load libraries
+
+```{r}
+#| label: Load libraries
+pacman::p_load(
+  tidyverse,
+  glue,
+  scales,
+  showtext,
+  ggtext,
+  shadowtext,
+  maps,
+  ggpattern,
+  ggrepel,
+  patchwork,
+  tidylog
+)
+
+font_add_google("Ubuntu", "Ubuntu", regular.wt = 400, bold.wt = 700)
+showtext_auto()
+showtext_opts(dpi = 300)
+```
+
+### 1.2 Set theme
+
+```{r}
+#| label: Set color and Themes
+
+cool_gray0 <- "#323955"
+cool_gray1 <- "#5a6695"
+cool_gray2 <- "#7e89bb"
+cool_gray3 <- "#a4aee2"
+cool_gray4 <- "#cbd5ff"
+cool_gray5 <- "#e7efff"
+
+cool_red0 <- "#A31C44"
+cool_red1 <- "#F01B5B"
+cool_red2 <- "#F43E75"
+cool_red3 <- "#E891AB"
+cool_red4 <- "#FAC3D3"
+cool_red5 <- "#FCE0E8"
+
+theme_set(
+  theme_minimal() +
+    theme(
+      # axis.line.x.bottom = element_line(color = 'cool_gray0', linewidth = .3),
+      # axis.ticks.x= element_line(color = 'cool_gray0', linewidth = .3),
+      # axis.line.y.left = element_line(color = 'cool_gray0', linewidth = .3),
+      # axis.ticks.y= element_line(color = 'cool_gray0', linewidth = .3),
+      # # panel.grid = element_line(linewidth = .3, color = 'grey90'),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      axis.ticks.length = unit(-0.15, "cm"),
+      plot.background = element_blank(),
+      # plot.title.position = "plot",
+      plot.title = element_text(family = "Ubuntu", size = 14, face = 'bold'),
+      plot.caption = element_text(
+        size = 8,
+        color = cool_gray3,
+        margin = margin(20, 0, 0, 0),
+        hjust = 0
+      ),
+      plot.subtitle = element_text(
+        size = 9,
+        lineheight = 1.15,
+        margin = margin(5, 0, 15, 0)
+      ),
+      axis.title.x = element_markdown(
+        family = "Ubuntu",
+        hjust = .5,
+        size = 8,
+        color = cool_gray1
+      ),
+      axis.title.y = element_markdown(
+        family = "Ubuntu",
+        hjust = .5,
+        size = 8,
+        color = cool_gray1
+      ),
+      axis.text = element_text(
+        family = "Ubuntu",
+        hjust = .5,
+        size = 8,
+        color = cool_gray1
+      ),
+      legend.position = "top",
+      text = element_text(family = "Ubuntu", color = cool_gray1),
+      # plot.margin = margin(25, 25, 25, 25)
+    )
+)
+```
+
+### 1.3 Load this week's data
+
+```{r}
+#| label: Load TidyTuesday data
+
+tuesdata <- tidytuesdayR::tt_load('2025-09-09')
+```
+
+
+## 2 Quick Exploratory Data Analysis
+### 2.1 Density: Countries x Years
+
+```{r}
+#| label: calculating desinty
+
+tuesdata$rank_by_year |>
+  count(year, sort = TRUE)
+
+```
+
+Wow, very complete data. Is this the real world?
+
+```{r}
+#| label: top 10 with most free
+
+tuesdata$rank_by_year |>
+  filter(year == 2021) |>
+  slice_max(visa_free_count, n = 10)
+
+tuesdata$rank_by_year |>
+  filter(year == 2021) |>
+  slice_min(visa_free_count, n = 10)
+```
+
+## 3 Transform Data for Plotting
+
+```{r}
+#| label: Transform data for plotting
+
+data2plot <- 
+  tuesdata$rank_by_year |>
+  filter(year == 2025)
+
+data2plot_summary <- 
+  tuesdata$rank_by_year |>
+  filter(year == 2025) |>
+  group_by(region) |>
+  summarize(
+    min_vfc = min(visa_free_count),
+    max_vfc = max(visa_free_count),
+    mean_vfc = mean(visa_free_count),
+    median_vfc = median(visa_free_count),
+    sd_vfc = sd(visa_free_count),
+    iqr_vfc = IQR(visa_free_count),
+  ) |>
+  ungroup()
+  
+
+```
+
+## 4 Time to plot!
+
+### 4.1 Raw chart
+
+```{r}
+#| label: Raw chart
+
+ggplot(data2plot_summary, aes(x = region, y = median_vfc)) +
+  geom_col() +
+  theme_grey()
+
+```
+
+
+### 4.2 Final chart
+
+```{r}
+#| label: Final chart
+#| fig-width: 5
+#| fig-height: 4
+
+data2plot_summary |>
+  mutate(region = fct_reorder(region, median_vfc)) |>
+  ggplot(aes(x = median_vfc, y = region)) +
+  ggbeeswarm::geom_beeswarm(
+    data = data2plot,
+    aes(x = visa_free_count, y = region, color = region),
+    size = 1,
+    alpha = .2,
+    cex = 1.1
+  ) +
+  #border
+  geom_point(aes(color = region), size = 8, alpha = .7) +
+  geom_text(
+    aes(label = floor(median_vfc)),
+    color = 'white',
+    family = 'Ubuntu',
+    size = 3,
+    hjust = 0.5,
+    vjust = 0.5
+  ) +
+  guides(color = 'none') +
+  scale_color_manual(values = MetBrewer::met.brewer("Nizami")) +
+  labs(
+    x = "Countries to which travelers may enter visa free (n)",
+    y = NULL,
+    title = "Henley Passport Index Data",
+    subtitle = str_wrap(
+      "Number of countries to which travelers in possession of each passport in the world may enter visa free. Displaying median values for each region. Data from 2025.", 
+      width = 70
+    ),
+    caption = str_wrap(
+      "NOTE This visualization offers a preliminary look at the data and may not capture the full complexity of the underlying reality. SOURCE #Tidytuesday 2025-09-09 GITHUB barreiro-r",
+      width = 80,
+    )
+  )
+
+
+```
