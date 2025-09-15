@@ -2,7 +2,7 @@
 title: "Allrecipes"
 author: "Rodrigo Barreiro"
 date: "2025-09-16"
-categories: circular, pie, artistic
+categories: [circular, pie, artistic]
 image: "image.png"
 page-navigation: true
 execute: 
@@ -195,10 +195,10 @@ tuesdata$cuisines |>
 
 mean_calories <-
   tuesdata$cuisines |>
-  select(country, calories, servings) |>
+  select(country, calories) |>
   group_by(country) |>
   filter(n() > 50) |>
-  summarise(calories = mean(calories/servings, na.rm = TRUE)) |>
+  summarise(calories = mean(calories, na.rm = TRUE)) |>
   ungroup()
 
 top5 <- mean_calories |>
@@ -211,9 +211,9 @@ bottom5 <- mean_calories |>
 
 data2plot <-
   tuesdata$cuisines |>
-  select(country, fat, carbs, protein,servings) |>
-  pivot_longer(c(-country, -servings), names_to = 'macronutrient', values_to = 'value') |>
-  mutate(value = value / servings) |>
+  select(country, fat, carbs, protein) |>
+  pivot_longer(c(-country), names_to = 'macronutrient', values_to = 'value') |>
+  mutate(value = value) |>
   group_by(country, macronutrient) |>
   summarise(mean_value = mean(value, na.rm = TRUE)) |>
   group_by(country) |>
