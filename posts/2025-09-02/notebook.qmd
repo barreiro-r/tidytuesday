@@ -2,7 +2,7 @@
 title: "Australian Frogs"
 author: "Rodrigo Barreiro"
 date: "2025-09-02"
-categories: spatial, composition
+categories: [spatial, composition]
 image: "image.png"
 page-navigation: true
 execute: 
