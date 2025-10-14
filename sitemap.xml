@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-10-07/notebook.html</loc>
+    <lastmod>2025-10-14T18:30:00.404Z</lastmod>
+  </url>
+  <url>
     <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-09-23/notebook.html</loc>
     <lastmod>2025-09-23T00:33:43.090Z</lastmod>
   </url>
@@ -95,5 +99,9 @@
   <url>
     <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-09-16/notebook.html</loc>
     <lastmod>2025-09-15T18:59:06.485Z</lastmod>
+  </url>
+  <url>
+    <loc>https://barreiro-r.github.io/tidytuesday/posts/2025-09-30/notebook.html</loc>
+    <lastmod>2025-10-14T18:03:34.344Z</lastmod>
   </url>
 </urlset>
