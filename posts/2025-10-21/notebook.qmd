@@ -2,7 +2,7 @@
 title: "Historic UK Meteorological & Climate Data"
 author: "Rodrigo Barreiro"
 date: "2025-10-21"
-categories: [TODO]
+categories: timeseries
 image: "image.png"
 page-navigation: true
 execute: 
