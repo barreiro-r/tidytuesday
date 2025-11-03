@@ -1,0 +1,221 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Agencies from the FBI Crime Data API\"\n",
+        "author: \"Rodrigo Barreiro\"\n",
+        "date: \"2025-02-18\"\n",
+        "categories: [python, bars]\n",
+        "image: \"image.png\"\n",
+        "page-navigation: true\n",
+        "engine: jupyter\n",
+        "execute: \n",
+        "  warning: false\n",
+        "  message: false\n",
+        "---\n",
+        "\n",
+        "## About the Data\n",
+        "\n",
+        "::: callout-note\n",
+        "{{< iconify line-md:github-loop >}} Check data in [TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-02-18/readme.md) GitHub repository.\n",
+        ":::\n",
+        "\n",
+        "This week we're exploring data from the FBI Crime Data API! Specifically, we’re looking at agency-level data across all 50 states in the USA. This dataset provides details on law enforcement agencies that have submitted data to the FBI’s Uniform Crime Reporting (UCR) Program and are displayed on the Crime Data Explorer (CDE).\n",
+        "\n",
+        "> The Open Data Portal of Istituto Nazionale di Geofisica e Vulcanologia (INGV) gives public access to data resulting from institutional research activities in the fields of Seismology, Volcanology, and Environment.\n",
+        "\n",
+        "## 1 Initializing\n",
+        "\n",
+        "### 1.1 Load libraries"
+      ],
+      "id": "42b31efa"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: libraries\n",
+        "\n",
+        "import pandas as pd\n",
+        "import matplotlib.pyplot as plt\n",
+        "import matplotlib.ticker as ticker"
+      ],
+      "id": "libraries",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### 1.2 Set theme"
+      ],
+      "id": "41b83f01"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: set-theme\n",
+        "plt.style.use('~/Documents/GitHub/tidytuesday/posts/2025-02-18/rb-style.mplstyle')"
+      ],
+      "id": "set-theme",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### 1.3 Load this week's data"
+      ],
+      "id": "25137848"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: load tidy-tuesday\n",
+        "agencies = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-02-18/agencies.csv')"
+      ],
+      "id": "load-tidy-tuesday",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## 2 Time to plot!\n",
+        "\n",
+        "### 2.1 Before"
+      ],
+      "id": "eb103a20"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: plot-before\n",
+        "\n",
+        "data2plot = (\n",
+        "    agencies.groupby(\"state\").size().reset_index(name=\"n\").sort_values(by=\"n\").tail(10)\n",
+        ")\n",
+        "\n",
+        "fig, ax = plt.subplots()\n",
+        "fig.set_figwidth(5)\n",
+        "fig.set_figheight(3)\n",
+        "\n",
+        "ax.set_axisbelow(True)\n",
+        "ax.grid(True, axis=\"x\", which=\"major\", linestyle=\"-\", linewidth=0.7, color=\"#d3daed\")\n",
+        "\n",
+        "\n",
+        "ax.barh(data2plot[\"state\"], data2plot[\"n\"], color=\"#495373\")\n",
+        "\n",
+        "# Apply the formatter to the y-axis\n",
+        "ax.xaxis.set_major_formatter(ticker.StrMethodFormatter(\"{x:,.0f}\"))\n",
+        "\n",
+        "ax.set_title(\"Number of agencies by state\")\n",
+        "ax.set_xlabel(\"Counts (n)\")\n",
+        "\n",
+        "plt.tight_layout()\n",
+        "plt.show()"
+      ],
+      "id": "plot-before",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### 2.2 After"
+      ],
+      "id": "e0f35af0"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| label: plot-after\n",
+        "plt.style.use(\"~/Documents/GitHub/tidytuesday/posts/2025-02-18/rb-style.mplstyle\")\n",
+        "\n",
+        "data2plot = (\n",
+        "    agencies.groupby([\"state\", \"agency_type\"])\n",
+        "    .size()\n",
+        "    .reset_index(name=\"n\")\n",
+        "    .sort_values(by=\"n\")\n",
+        ")\n",
+        "\n",
+        "# Pivot wider to make the stacked byplot\n",
+        "data2plot_wide = data2plot.pivot_table(\n",
+        "    index=\"state\", columns=\"agency_type\", values=\"n\", fill_value=0\n",
+        ")\n",
+        "\n",
+        "# Sorting and filtering\n",
+        "data2plot_wide[\"total_agencies\"] = data2plot_wide.sum(axis=1)\n",
+        "data2plot_wide_sorted = data2plot_wide.sort_values(by=\"total_agencies\", ascending=True)\n",
+        "data2plot_wide_sorted = data2plot_wide_sorted.query(\"total_agencies > 450\")\n",
+        "data2plot_wide_sorted.drop(columns=\"total_agencies\", inplace=True)\n",
+        "\n",
+        "# Start plotting ------------------------------------------------------------------------\n",
+        "fig, ax = plt.subplots()\n",
+        "\n",
+        "# Color palette\n",
+        "color_map = [\n",
+        "    \"#495373\",\n",
+        "    \"#ce4441\",\n",
+        "    \"#ee8577\",\n",
+        "    \"#eb7926\",\n",
+        "    \"#ffbb44\",\n",
+        "    \"#859b6c\",\n",
+        "    \"#62929a\",\n",
+        "    \"#004f63\",\n",
+        "    \"#122451\",\n",
+        "]\n",
+        "\n",
+        "# Geom\n",
+        "data2plot_wide_sorted.plot(\n",
+        "    kind=\"barh\", stacked=True, figsize=(5, 3), ax=ax, width=0.8, color=color_map\n",
+        ")\n",
+        "\n",
+        "# Add grid\n",
+        "ax.set_axisbelow(True)\n",
+        "ax.grid(True, axis=\"x\", which=\"major\", linestyle=\"-\", linewidth=0.7, color=\"#d3daed\")\n",
+        "\n",
+        "# Format x axis (add comma)\n",
+        "ax.xaxis.set_major_formatter(ticker.StrMethodFormatter(\"{x:,.0f}\"))\n",
+        "\n",
+        "# Labels\n",
+        "ax.set_title(\"Number of agencies by state\")\n",
+        "ax.set_xlabel(\"Counts (n)\")\n",
+        "ax.set_ylabel(\"\")\n",
+        "\n",
+        "# Legend\n",
+        "plt.legend(\n",
+        "    title=\"Type of Agency\", title_fontproperties={\"weight\": \"bold\"}, alignment=\"left\"\n",
+        ")\n",
+        "\n",
+        "# Plot & Pray\n",
+        "plt.tight_layout()\n",
+        "plt.show()"
+      ],
+      "id": "plot-after",
+      "execution_count": null,
+      "outputs": []
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/Users/drt60386/Library/Python/3.12/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
