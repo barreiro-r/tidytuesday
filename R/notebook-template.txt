@@ -88,7 +88,7 @@ theme_set(
         margin = margin(20, 0, 0, 0),
         hjust = 0
       ),
-      plot.subtitle = element_text(
+      plot.subtitle = element_markdown(
         size = 9,
         lineheight = 1.15,
         margin = margin(5, 0, 15, 0)

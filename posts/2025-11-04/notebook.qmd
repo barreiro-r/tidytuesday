@@ -2,7 +2,7 @@
 title: "Lead concentration in Flint water samples in 2015"
 author: "Rodrigo Barreiro"
 date: "2025-11-04"
-categories: [beeswarm]
+categories: [beeswarmx]
 image: "image.png"
 page-navigation: true
 execute: 
@@ -19,6 +19,10 @@ execute:
 <!-- giving credits -->
 ::: callout-note
 {{< iconify line-md:github-loop >}} Check the data in [TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-11-04/readme.md) GitHub repository.
+:::
+
+::: callout-warning
+This dataset was removed from the [TidyTuesday](https://github.com/rfordatascience/tidytuesday) repository due to ethical reasons https://www.journals.uchicago.edu/doi/full/10.1086/693853
 :::
 
 <!-- intro -->

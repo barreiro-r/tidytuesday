@@ -1,8 +1,8 @@
 ---
-title: "Pima Indian Diabetes Data: A Prospective Observational Cohort"
+title: "WHO TB Burden Data: Incidence, Mortality, and Population"
 author: "Rodrigo Barreiro"
 date: "2025-11-11"
-categories: [density]
+categories: [TODO]
 image: "image.png"
 page-navigation: true
 execute: 
@@ -22,9 +22,9 @@ execute:
 :::
 
 <!-- intro -->
-This week we are exploring type 2 diabetes data from the Pima Indian community near Phoenix, Arizona. The study includes only women aged 21 and older, all of Pima heritage, with at least five years of follow-up. Each participant underwent regular oral glucose tolerance tests, and diabetes was diagnosed using WHO criteria.
+This week, we explore global tuberculosis (TB) burden estimates from the World Health Organization, using data curated via [the getTBinR R package by Sam Abbott](https://samabbott.co.uk/getTBinR/). The dataset includes country-level indicators such as TB incidence, mortality, case detection rates, and population estimates across multiple years. These metrics help researchers, public health professionals, and learners understand the scale and distribution of TB worldwide.
 
-> People with type 2 diabetes mellitus (DM) become less sensitive to insulin. After a glucose load, both blood glucose and insulin levels rise, but glucose does not fall as quickly as it should—leading to sustained elevations. The incidence of type 2 DM is rising in many Western cultures, as increasingly unhealthy and calorie-rich diets become common.
+> Tuberculosis remains one of the world’s deadliest infectious diseases. WHO estimates that 10.6 million people fell ill with TB in 2021, and 1.6 million died from the disease. Monitoring TB burden is essential to guide national responses and global strategies.
 
 
 ## 1 Initializing
@@ -82,9 +82,9 @@ theme_set(
       panel.grid.minor = element_blank(),
       axis.ticks.length = unit(-0.15, "cm"),
       plot.background = element_blank(),
-      plot.title.position = "plot",
+      # plot.title.position = "plot",
       plot.title = element_text(family = "Ubuntu", size = 14, face = 'bold'),
-      plot.caption = element_markdown(
+      plot.caption = element_text(
         size = 8,
         color = cool_gray3,
         margin = margin(20, 0, 0, 0),
@@ -130,104 +130,28 @@ tuesdata <- tidytuesdayR::tt_load('2025-11-11')
 
 
 ## 2 Quick Exploratory Data Analysis
-### 2.1 Completude
+### 2.1 Test Correlation
 
 ```{r}
-#| label: completude
-
-tuesdata$diabetes |>
-  mutate(id = row_number()) |>
-  pivot_longer(-id, names_to = "name", values_to = "value",values_transform = as.character ) |>
-  group_by(name) |>
-  count(is_na = is.na(value)) |>
-  ggplot(aes(x = n, y = name)) +
-  geom_col(aes(fill = is_na))
+#| label: test correlation
+tuesdata$who_tb_data |>
+  ggplot(aes(x = c_newinc_100k, y = e_mort_tbhiv_100k)) +
+  geom_point()
 
 ```
-
-```{r}
-tuesdata$diabetes |>
-  mutate(id = row_number()) |>
-  pivot_longer(-c(id, diabetes_5y)) |>
-  group_by(name) |>
-  mutate(
-    zscore = (value - mean(value, na.rm = TRUE)) / sd(value, na.rm = TRUE)
-  ) |>
-  ggplot(aes(x = name, y = zscore)) +
-  ggbeeswarm::geom_quasirandom(
-    aes(color = diabetes_5y),
-    dodge.width = .7,
-    size = .5,
-    alpha = .1
-  ) +
-  stat_summary(
-    aes(fill = diabetes_5y),
-    geom = "point",
-    fun = mean,
-    size = 3,
-    shape = 21,
-    color = "white",
-    position = position_dodge(width = .7)
-  )
-```
-
-```{r}
-tuesdata$diabetes |>
-  select(-diabetes_5y) |>
-  cor(use = 'pairwise.complete.obs') |>
-  ggcorrplot::ggcorrplot()
-```
-
 
 
 ## 3 Transform Data for Plotting
 
 ```{r}
 #| label: Transform data for plotting
-data2plot <-
-  tuesdata$diabetes |>
-  mutate(id = row_number()) |>
-  pivot_longer(-c(id, diabetes_5y)) |>
-  group_by(name) |>
-  mutate(
-    zscore = (value - mean(value, na.rm = TRUE)) / sd(value, na.rm = TRUE)
-  ) |>
-  ungroup()
-
-means_data2plot <-
-  data2plot |>
-  group_by(name, diabetes_5y) |>
-  summarise(
-    mean = mean(zscore, na.rm = TRUE),
-    mean_original = mean(value, na.rm = TRUE)
-  )
-
-
-my_order <- means_data2plot |>
-  select(name, diabetes_5y, mean) |>
-  pivot_wider(names_from = diabetes_5y, values_from = mean) |>
-  mutate(delta = abs(neg - pos)) |>
-  arrange(delta) |>
-  pull(name)
-
-data2plot <- data2plot |>
-  mutate(name = factor(name, levels = rev(my_order)))
-
-
-pretty_names <- c(
-  "pregnancy_num" = "**Number of Pregnancies**",
-  "glucose_mg-dl" = "**Glucose** (mg/dL)",
-  "dbp_mm-hg" = "**Diastolic Blood Pressure** (mmHg)",
-  "triceps_mm" = "**Triceps Skinfold** (mm)",
-  "insulin_microiu-ml" = "**Insulin** (microU/mL)",
-  "bmi" = "**Body Mass Index**",
-  "pedigree" = "**Pedigree**",
-  "age" = "**Age** (years)")
-
-pretty_names[my_order]
-  
-
-
+data2plot <- 
+  tuesdata$who_tb_data |>
+  group_by(year) |>
+  summarise(mean_tbhiv_mort = mean(e_mort_tbhiv_100k, na.rm = T),
+            mean_exc_tbhiv_mort = mean(e_mort_exc_tbhiv_100k, na.rm = T)) |>
+  ungroup() |>
+  pivot_longer(cols = c(mean_tbhiv_mort, mean_exc_tbhiv_mort))
 ```
 
 ## 4 Time to plot!
@@ -236,14 +160,10 @@ pretty_names[my_order]
 
 ```{r}
 #| label: Raw chart
-
 data2plot |>
-  ggplot(aes(x = zscore)) +
-  geom_density(aes(fill = diabetes_5y), alpha = .2, color = NULL) +
-  facet_wrap(~name, ncol = 2)
-
-
-
+  ggplot(aes(x = year, y = value, fill = name)) +
+  geom_col(position = 'dodge') +
+  theme_gray()
 ```
 
 
@@ -253,93 +173,91 @@ data2plot |>
 #| label: Final chart
 #| width: 3.5
 #| height: 2.5
-#| fig-width: 7
-#| fig-height: 7
+#| fig-width: 5
+#| fig-height: 5
 
-data2plot |>
-  ggplot(aes(x = zscore)) +
-  geom_density(aes(fill = diabetes_5y), linewidth = 0, show.legend = FALSE) |>
-    ggblend::blend("multiply") +
-  geom_line(
-    data = means_data2plot,
-    aes(group = name, x = mean),
-    y = 1,
-    color = cool_gray4
-  ) +
-  geom_point(
-    data = means_data2plot,
-    aes(color = diabetes_5y, x = mean),
-    y = 1,
+grid_data <- tibble(
+  breaks = seq(0, ceiling(max(data2plot$value) / 5) * 5, length.out = 5),
+  labels = seq(0, ceiling(max(data2plot$value) / 5) * 5, length.out = 5),
+)
+
+plot <-
+  data2plot |>
+  ggplot(aes(x = year, y = value)) +
+  ggpattern::geom_area_pattern(
+    aes(pattern_fill = I("white"), pattern_fill2 = name, color = name),
+    pattern = 'gradient',
+    pattern_alpha = 0.01,
+    fill = NA,
+    pattern_density = 0.9,
+    position = 'identity',
     show.legend = FALSE
   ) +
-  geom_text(
-    data = means_data2plot |> filter(diabetes_5y == "pos"),
-    aes(
-      color = diabetes_5y,
-      x = mean + 0.2,
-      label = round(mean_original, digits = 1)
-    ),
-    y = 1,
-    size = 2.5,
-    hjust = 0,
-    show.legend = FALSE
-  ) +
-  geom_text(
-    data = means_data2plot |> filter(diabetes_5y == "neg"),
-    aes(
-      color = diabetes_5y,
-      x = mean - 0.2,
-      label = round(mean_original, digits = 1)
-    ),
-    y = 1,
-    size = 2.5,
-    hjust = 1,
-    show.legend = FALSE,
+
+  # add names
+  annotate(
+    geom = "text",
+    label = "HIV-negative",
+    x = 2019,
+    y = 13,
+    color = cool_gray1,
     family = "Ubuntu"
   ) +
-  facet_wrap(
-    # ~ name,
-    ~ factor(
-      name,
-      levels = rev(my_order),
-      labels = pretty_names[rev(my_order)]
-    ),
-    ncol = 2,
-    # labeller = labeller(name = pretty_names)
+  annotate(
+    geom = "text",
+    label = "HIV-positive",
+    x = 2019,
+    y = 4,
+    color = cool_red1,
+    family = "Ubuntu"
   ) +
-  scale_y_continuous(limits = c(0, 1)) +
-  scale_x_continuous(limits = c(-2, 3)) +
-  scale_fill_manual(values = c(pos = cool_gray1, neg = cool_red2)) +
-  scale_color_manual(values = c(pos = cool_gray1, neg = cool_red2)) +
+
+  # add grid
+  geom_segment(
+    data = grid_data,
+    aes(x = -Inf, xend = Inf, y = breaks),
+    color = cool_gray3,
+    linewidth = 0.1
+  ) +
+  geom_text(
+    data = grid_data,
+    aes(x = 2024, y = breaks, label = labels),
+    hjust = 1,
+    size = 3.5,
+    family = "Ubuntu",
+    vjust = -0.35,
+    color = cool_gray3,
+  ) +
+
+  ggpattern::scale_pattern_fill2_manual(
+    values = c(
+      'mean_tbhiv_mort' = cool_red4,
+      'mean_exc_tbhiv_mort' = cool_gray4
+    )
+  ) +
+  scale_color_manual(
+    values = c(
+      'mean_tbhiv_mort' = cool_red1,
+      'mean_exc_tbhiv_mort' = cool_gray1
+    )
+  ) +
   theme(
-    axis.text = element_blank(),
-    strip.text.x = element_markdown(
-      hjust = 0,
-      color = cool_gray1,
-      size = 8
-    ),
+    axis.line.x = element_line(color = cool_gray0, linewidth = .3),
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank()
   ) +
   labs(
-    y = NULL,
-    title = "Pima Indian Diabetes Data",
-    subtitle = str_wrap(
-      'This week we are exploring type 2 diabetes data from the Pima Indian community near Phoenix, Arizona. The study includes only women aged 21 and older, all of Pima heritage, with at least five years of follow-up. Each participant underwent regular oral glucose tolerance tests, and diabetes was diagnosed using WHO criteria.',
-      width = 105,
-    ) |>
-      str_replace_all("\\n", "<br>") |>
-      str_c(
-        '<br><br>**Mean value** (<span style="color:#7e89bb">No Diabetes</span>, <span style="color:#F43E75">Developed Diabetes</span>)'
-      ),
-    caption = str_c(
-      "Glucose: Plasma glucose concentration at 2 hours after administration of an oral glucose tolerance test<br><br>",
-      str_wrap(
-        "NOTE This visualization offers a preliminary look at the data and may not capture the full complexity of the underlying reality. SOURCE #Tidytuesday 2025-11-11 GITHUB barreiro-r",
-        width = 120,
-      ) |>
-        str_replace_all("\\n", "<br>")
-    ),
     x = NULL,
-    fill = NULL
-  )
-
+      title = "WHO tuberculosis Burden Data",
+    subtitle = str_wrap(
+      'Comparing TB mortality in HIV-positive and HIV-negative populations.<br><br>**Estimated mortality of TB cases per 100 000 population**',
+      width = 100,
+    ),
+    caption = str_wrap(
+      "NOTE This visualization offers a preliminary look at the data and may not capture the full complexity of the underlying reality. SOURCE #Tidytuesday 2025-11-11 GITHUB barreiro-r",
+      width = 100,
+    ),
+  ) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  scale_x_continuous(expand = c(0, 0))
 ```
