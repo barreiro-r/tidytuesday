@@ -2,7 +2,7 @@
 title: "WHO TB Burden Data: Incidence, Mortality, and Population"
 author: "Rodrigo Barreiro"
 date: "2025-11-11"
-categories: [TODO]
+categories: [timeseries, pattern]
 image: "image.png"
 page-navigation: true
 execute: 
